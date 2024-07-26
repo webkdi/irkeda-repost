@@ -9,6 +9,7 @@ const cron = require('node-cron');
 // Define the main function
 async function runTask() {
     try {
+        console.log('Task started at', new Date().toISOString()); // Log the start time
 
         // Get updates from Telegram
         const messages = await tg.get_updates();
@@ -22,11 +23,6 @@ async function runTask() {
                 throw new Error("Expected an array of messages, but got something else");
             }
         }
-
-        // // Store messages in a local JSON file
-        // const jsonFilePath = path.join(__dirname, 'messages.json');
-        // fs.writeFileSync(jsonFilePath, JSON.stringify(messages, null, 2), 'utf-8');
-        // console.log(`Messages have been stored in ${jsonFilePath}`);
 
         const downloadFolder = path.join(__dirname, './downloads');
         // Process each message
@@ -47,11 +43,11 @@ async function runTask() {
             if (message.type === 'image') {
                 const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
                 console.log("vk.postImageWithMessage:", vkResponse);
-                const okResponse = await ok.postImage(localFilePath, message.message)
+                const okResponse = await ok.postImage(localFilePath, message.message);
                 console.log("ok.postImage:", okResponse);
             } else if (message.type === 'video') {
                 const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
-                console.log(vkResponse);
+                console.log("vk.postVideoWithMessage:", vkResponse);
                 const okResponse = await ok.postVideo(localFilePath, message.message);
                 console.log("ok.postVideo:", okResponse);
             } else if (message.type === 'text') {
@@ -71,6 +67,8 @@ async function runTask() {
                 }
             });
         }
+
+        console.log('Task completed at', new Date().toISOString()); // Log the completion time
     } catch (error) {
         console.error("An error occurred:", error);
     }
@@ -78,6 +76,7 @@ async function runTask() {
 
 // Schedule the task to run every hour
 cron.schedule('15 */2 * * * *', runTask);
+console.log('Cron job scheduled to run every 2 minutes at the 15th second.'); // Log when the cron job is scheduled
 // runTask();
 
 // console.log('Cron job scheduled to run every hour.');
