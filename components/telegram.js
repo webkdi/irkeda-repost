@@ -177,7 +177,7 @@ async function get_updates() {
                 if (changes > 0) {
                     console.log('Update ID inserted:', update_id);
                 } else {
-                    console.log('Update ID already exists:', update_id);
+                    // console.log('Update ID already exists:', update_id);
                     return null; // Return null for entries to skip
                 }
 
@@ -299,6 +299,10 @@ async function get_updates() {
             })
         );
 
+        if (messages.length === 0) {
+            console.log(`${now}: No relevant updates. Skipped`);
+            return null;
+        }
         return messages;
     } catch (error) {
         console.error('Error fetching updates:', error);

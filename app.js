@@ -16,7 +16,7 @@ async function runTask() {
         // Check if messages is null or not an array
         if (!Array.isArray(messages)) {
             if (messages === null) {
-                console.log("No new updates. Skipping processing.");
+                // console.log("No new updates. Skipping processing.");
                 return;
             } else {
                 throw new Error("Expected an array of messages, but got something else");
@@ -77,7 +77,7 @@ async function runTask() {
 }
 
 // Schedule the task to run every hour
-// cron.schedule('15 */2 * * * *', runTask);
+cron.schedule('15 */2 * * * *', runTask);
 // runTask();
 
 // console.log('Cron job scheduled to run every hour.');
