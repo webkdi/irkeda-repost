@@ -1,6 +1,7 @@
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+const FormData = require('form-data');
 
 require('dotenv').config();
 
@@ -132,8 +133,8 @@ async function get_updates() {
         const data = response.data;
 
         // Store messages in a local JSON file
-        var jsonFilePath = path.join(__dirname, 'getUpdatesA.json');
-        fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), 'utf-8');
+        // var jsonFilePath = path.join(__dirname, 'getUpdatesA.json');
+        // fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), 'utf-8');
 
         if (!data.result || data.result.length === 0) {
             console.log(`${now}: No new updates. Skipped`);
@@ -153,15 +154,15 @@ async function get_updates() {
 
         let updates = updatesBeforeRenaming.map(renameMessageToChannelPost);
 
-        // Store messages in a local JSON file
-        jsonFilePath = path.join(__dirname, 'getUpdatesB.json');
-        fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
+        // // Store messages in a local JSON file
+        // jsonFilePath = path.join(__dirname, 'getUpdatesB.json');
+        // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
 
         updates = updates.filter(
             (obj) =>
-              obj.channel_post &&
-              (obj.channel_post.chat.title === "fb_ФЗЕ перепосты")
-          );
+                obj.channel_post &&
+                (obj.channel_post.chat.title === "fb_ФЗЕ перепосты")
+        );
 
         if (updates.length === 0) {
             console.log(`${now}: No relevant updates. Skipped`);
@@ -335,35 +336,50 @@ async function get_updates() {
 //     }
 // }
 
-async function forwardMessage(type, message, fileId, targetChatId, telegramBotToken) {
+async function forwardMessage(type, message, localFilePath, targetChatId, telegramBotToken) {
     try {
         if (type == "text") {
-            await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
+            const res = await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
                 chat_id: targetChatId,
                 text: message
             });
             console.log(`Text message sent to ${targetChatId}`);
+            return res;
         } else if (type == "image") {
-            await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, {
-                chat_id: targetChatId,
-                photo: fileId,
-                caption: message
+            // const filePath = path.join(downloadFolder, fileId);
+            const filePath = localFilePath;
+            const form = new FormData();
+            form.append('chat_id', targetChatId);
+            form.append('photo', fs.createReadStream(filePath));
+            form.append('caption', message);
+
+            const res = await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendPhoto`, form, {
+                headers: form.getHeaders()
             });
             console.log(`Photo message sent to ${targetChatId}`);
+            return res;
         } else if (type == "video") {
-            await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendVideo`, {
-                chat_id: targetChatId,
-                video: fileId,
-                caption: message
+            // const filePath = path.join(downloadFolder, fileId);
+            const filePath = localFilePath;
+            const form = new FormData();
+            form.append('chat_id', targetChatId);
+            form.append('video', fs.createReadStream(filePath));
+            form.append('caption', message);
+
+            const res = await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendVideo`, form, {
+                headers: form.getHeaders()
             });
+            return res;
             console.log(`Video message sent to ${targetChatId}`);
         } else {
             console.log('Unsupported message type');
         }
     } catch (error) {
         console.error(`Error resending message:`, error);
+        return error;
     }
 }
+
 
 module.exports = {
     get_updates,
