@@ -4,12 +4,27 @@ const tg = require("./components/telegram.js");
 const vk = require("./components/vk.js");
 const ok = require("./components/ok.js");
 const image = require("./components/images.js");
+const cron = require('node-cron');
 
-// Run the code
-(async () => {
+// Define the main function
+async function runTask() {
     try {
+        console.log("run");
         // Get updates from Telegram
         const messages = await tg.get_updates();
+
+        // Log the messages to understand its structure
+        console.log("Received messages:", messages);
+
+        // Check if messages is null or not an array
+        if (!Array.isArray(messages)) {
+            if (messages === null) {
+                console.log("No new updates. Skipping processing.");
+                return;
+            } else {
+                throw new Error("Expected an array of messages, but got something else");
+            }
+        }
 
         // Store messages in a local JSON file
         const jsonFilePath = path.join(__dirname, 'messages.json');
@@ -19,7 +34,6 @@ const image = require("./components/images.js");
         const downloadFolder = path.join(__dirname, './downloads');
         // Process each message
         for (const message of messages) {
-
             const localFilePath = message.file_local ? path.join(downloadFolder, message.file_local) : null; // Adjusted to use local file path if it exists
             // console.log("localFilePath:", localFilePath);
 
@@ -28,7 +42,7 @@ const image = require("./components/images.js");
             // const targetChatId = process.env.TG_REPOST_CHANNEL_ID;
             // await tg.forwardMessage(message.type, message.message, message.file_fileId, targetChatId, telegramBotToken);
 
-            //repost to vk ok
+            // repost to vk ok
             if (message.type === 'image') {
                 // const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
                 // console.log("vk.postImageWithMessage:", vkResponse);
@@ -37,17 +51,34 @@ const image = require("./components/images.js");
             } else if (message.type === 'video') {
                 // const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
                 // console.log(vkResponse);
-                const okResponse = await ok.postVideo(localFilePath, message.message)
+                const okResponse = await ok.postVideo(localFilePath, message.message);
                 console.log("ok.postVideo:", okResponse);
             } else if (message.type === 'text') {
                 const link = message.url ? message.url : null;
-                // const vkResponse = await vk.postText(message.message, link)
+                // const vkResponse = await vk.postText(message.message, link);
                 // console.log("vk.postText:", vkResponse);
-                // const okResponse = await ok.postText(message.message)
+                // const okResponse = await ok.postText(message.message);
                 // console.log("ok.postText:", okResponse);
             }
         }
     } catch (error) {
         console.error("An error occurred:", error);
     }
-})();
+}
+
+// Schedule the task to run every hour
+// cron.schedule('*/15 * * * * *', runTask);
+// runTask();
+
+console.log('Cron job scheduled to run every hour.');
+
+// # ┌────────────── second (optional)
+// # │ ┌──────────── minute
+// # │ │ ┌────────── hour
+// # │ │ │ ┌──────── day of month
+// # │ │ │ │ ┌────── month
+// # │ │ │ │ │ ┌──── day of week
+// # │ │ │ │ │ │
+// # │ │ │ │ │ │
+// # * * * * * *
+//  '*/15 * * * * *' every 15 seconds

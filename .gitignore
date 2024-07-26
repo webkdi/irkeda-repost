@@ -1,4 +1,15 @@
+# Node.js dependencies
 node_modules/
+
+# Environment variables
 .env
+
+# Local download directory
 downloads/
+
+# Ignore all text files
 *.txt
+
+# Optional: add other common ignores
+.DS_Store  # macOS
+Thumbs.db  # Windows
