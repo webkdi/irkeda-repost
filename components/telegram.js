@@ -2,12 +2,12 @@ const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
 const FormData = require('form-data');
+const db = require("./database.js");
 
 require('dotenv').config();
 
 const sqlite3 = require('sqlite3').verbose();
-let db = new sqlite3.Database('./database.db');
-
+// let db = new sqlite3.Database('./database.db');
 
 // Ensure the local folder exists
 const downloadFolder = path.join(__dirname, '../downloads');
@@ -16,12 +16,12 @@ if (!fs.existsSync(downloadFolder)) {
     fs.mkdirSync(downloadFolder);
 }
 
-// Ensure the table exists
-db.run(`CREATE TABLE IF NOT EXISTS tg_updates (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    update_id INTEGER UNIQUE,
-    content TEXT
-)`);
+// // Ensure the table exists
+// db.run(`CREATE TABLE IF NOT EXISTS tg_updates (
+//     id INTEGER PRIMARY KEY AUTOINCREMENT,
+//     update_id INTEGER UNIQUE,
+//     content TEXT
+// )`);
 
 // Function to download a file
 async function downloadFile(url, filename) {
@@ -39,29 +39,18 @@ async function downloadFile(url, filename) {
     });
 }
 
-async function db_save_update(update_id) {
-    return new Promise((resolve, reject) => {
-        const stmt = db.prepare(`INSERT OR IGNORE INTO tg_updates (update_id) VALUES (?)`);
-        stmt.run(update_id, function (err) {
-            if (err) {
-                return reject(err);
-            }
-            resolve(this.changes); // returns number of rows changed (0 if ignored)
-        });
-        stmt.finalize();
-    });
-}
-
-async function db_read_all() {
-    return new Promise((resolve, reject) => {
-        db.all(`SELECT * FROM tg_updates`, [], (err, rows) => {
-            if (err) {
-                return reject(err);
-            }
-            resolve(rows);
-        });
-    });
-}
+// async function db_save_update(update_id) {
+//     return new Promise((resolve, reject) => {
+//         const stmt = db.prepare(`INSERT OR IGNORE INTO tg_updates (update_id) VALUES (?)`);
+//         stmt.run(update_id, function (err) {
+//             if (err) {
+//                 return reject(err);
+//             }
+//             resolve(this.changes); // returns number of rows changed (0 if ignored)
+//         });
+//         stmt.finalize();
+//     });
+// }
 
 function generateUrlFromTelegramMessage(message) {
     if (message.text || message.caption) {
@@ -132,7 +121,7 @@ async function get_updates() {
         const response = await axios.get(telegramAPIEndpoint);
         const data = response.data;
 
-        // Store messages in a local JSON file
+        // // Store messages in a local JSON file
         // var jsonFilePath = path.join(__dirname, 'getUpdatesA.json');
         // fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), 'utf-8');
 
@@ -161,7 +150,7 @@ async function get_updates() {
         updates = updates.filter(
             (obj) =>
                 obj.channel_post &&
-                (obj.channel_post.chat.title === "fb_ФЗЕ перепосты")
+                (obj.channel_post.chat.id === -1002215553870) //fb_ИркедА перепосты
         );
 
         if (updates.length === 0) {
@@ -173,7 +162,7 @@ async function get_updates() {
             updates.map(async (ms) => {
                 const update_id = ms.update_id;
                 const content = JSON.stringify(ms.channel_post);
-                const changes = await db_save_update(update_id);
+                const changes = await db.insertIgnore(update_id);
                 if (changes > 0) {
                     console.log('Update ID inserted:', update_id);
                 } else {
@@ -303,6 +292,11 @@ async function get_updates() {
             console.log(`${now}: No relevant updates. Skipped`);
             return null;
         }
+
+        // // Store messages in a local JSON file
+        // jsonFilePath = path.join(__dirname, 'getUpdatesC.json');
+        // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
+
         return messages;
     } catch (error) {
         console.error('Error fetching updates:', error);

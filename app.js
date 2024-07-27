@@ -29,7 +29,9 @@ async function runTask() {
         for (const message of messages) {
 
             // add logo and resize image
-            await image.processImage(message.file_local);
+            if (message.type === 'image') {
+                await image.processImage(message.file_local);
+            }
 
             const localFilePath = message.file_local ? path.join(downloadFolder, message.file_local) : null; // Adjusted to use local file path if it exists
             // console.log("localFilePath:", localFilePath);
