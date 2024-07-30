@@ -41,18 +41,20 @@ async function runTask() {
             const targetChatId = process.env.TG_REPOST_CHANNEL_ID;
             await tg.forwardMessage(message.type, message.message, localFilePath, targetChatId, telegramBotToken);
 
+            //(de)reactivate vkok for test purposes
+            repost_vkok = true
             // repost to vk ok
-            if (message.type === 'image') {
+            if (message.type === 'image' && repost_vkok) {
                 const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
                 console.log("vk.postImageWithMessage:", vkResponse);
                 const okResponse = await ok.postImage(localFilePath, message.message);
                 console.log("ok.postImage:", okResponse);
-            } else if (message.type === 'video') {
+            } else if (message.type === 'video' && repost_vkok) {
                 const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
                 console.log("vk.postVideoWithMessage:", vkResponse);
                 const okResponse = await ok.postVideo(localFilePath, message.message);
                 console.log("ok.postVideo:", okResponse);
-            } else if (message.type === 'text') {
+            } else if (message.type === 'text' && repost_vkok) {
                 const link = message.url ? message.url : null;
                 const vkResponse = await vk.postText(message.message, link);
                 console.log("vk.postText:", vkResponse);

@@ -143,9 +143,7 @@ async function get_updates() {
 
         let updates = updatesBeforeRenaming.map(renameMessageToChannelPost);
 
-        // // Store messages in a local JSON file
-        // jsonFilePath = path.join(__dirname, 'getUpdatesB.json');
-        // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
+
 
         updates = updates.filter(
             (obj) =>
@@ -157,6 +155,10 @@ async function get_updates() {
             console.log(`${now}: No relevant updates. Skipped`);
             return null;
         }
+
+        // // Store messages in a local JSON file
+        // jsonFilePath = path.join(__dirname, 'getUpdatesB.json');
+        // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
 
         await Promise.all(
             updates.map(async (ms) => {
@@ -171,7 +173,6 @@ async function get_updates() {
                 }
 
                 if (ms.channel_post) {
-
                     // // Make repost
                     // const message = {
                     //     chat_id: ms.channel_post.chat.id,
@@ -197,13 +198,14 @@ async function get_updates() {
                         //   asset.files = ms.channel_post.photo;
                         //   asset.message = "";
                         //   asset.type = "image";
-                    } else if (ms.channel_post.video && ms.channel_post.caption) {
-                        asset.files = ms.channel_post.video;
+                    } else if (ms.channel_post.animation && ms.channel_post.animation.mime_type == "video/mp4" && ms.channel_post.caption) {
+                        asset.files = ms.channel_post.animation;
                         asset.message = ms.channel_post.caption;
                         asset.type = "video";
                     } else {
                         unknown.push(ms);
                     }
+
 
                     //найти ссылку
                     const urlFound = await generateUrlFromTelegramMessage(
