@@ -37,7 +37,6 @@ async function postMessages(messages) {
         console.error('Error: messages is not an array');
         return;
     }
-    console.log("STARTED MESSAGES!!!!", messages.length);
 
     const downloadFolder = path.join(__dirname, downloadFolderForImages);
 
@@ -108,27 +107,20 @@ async function runTask() {
 
         // Get updates from Telegram
         const messagesFromTg = await tg.get_updates();
-        if (!Array.isArray(messagesFromTg)) {
-            if (messagesFromTg === null) {
-                console.log("No new updates. Skipping processing.");
-                // return;
-            } else {
-                throw new Error("Expected an array of messagesFromTg, but got something else");
-            }
+        if (messagesFromTg === null) {
+            console.log("No new updates. Skipping processing.");
+        } else {
+            await postMessages(messagesFromTg);
         }
-        await postMessages(messagesFromTg);
 
         // Get updates from Telegram
         const messagesFromMailRu = await mailru.fetchAndParse();
-        if (!Array.isArray(messagesFromMailRu)) {
-            if (messagesFromMailRu === null) {
-                console.log("No new updates from messagesFromMailRu. Skipping processing.");
-                return;
-            } else {
-                throw new Error("Expected an array of messagesFromMailRu, but got something else");
-            }
+        if (messagesFromMailRu === null) {
+            console.log("No new updates from messagesFromMailRu. Skipping processing.");
+            return;
+        } else {
+            await postMessages(messagesFromMailRu);
         }
-        await postMessages(messagesFromMailRu);
 
         // clean download
         await deleteAllFilesInFolder();
@@ -142,8 +134,7 @@ async function runTask() {
 
 // Schedule the task to run every hour
 cron.schedule('15 */5 * * * *', runTask);
-// cron.schedule('1 * * * * *', runTask);
-// console.log('Cron job scheduled to run every 2 minutes at the 15th second.'); // Log when the cron job is scheduled
+console.log('Cron job scheduled to run every 2 minutes at the 15th second.'); // Log when the cron job is scheduled
 // runTask();
 
 // console.log('Cron job scheduled to run every hour.');

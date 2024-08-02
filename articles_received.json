@@ -1,0 +1,512 @@
+{
+  "data": {
+    "pager": {
+      "count": 3905,
+      "previous_url": null,
+      "next_url": "https://health.mail.ru/news/list/eating/?page=2",
+      "page_links": [
+        {
+          "url": "https://health.mail.ru/news/list/eating/",
+          "number": 1,
+          "is_active": true,
+          "is_break": false
+        },
+        {
+          "url": "https://health.mail.ru/news/list/eating/?page=2",
+          "number": 2,
+          "is_active": false,
+          "is_break": false
+        },
+        {
+          "url": "https://health.mail.ru/news/list/eating/?page=3",
+          "number": 3,
+          "is_active": false,
+          "is_break": false
+        },
+        {
+          "url": null,
+          "number": null,
+          "is_active": false,
+          "is_break": true
+        },
+        {
+          "url": "https://health.mail.ru/news/list/eating/?page=391",
+          "number": 391,
+          "is_active": false,
+          "is_break": false
+        }
+      ],
+      "seo_url": "https://health.mail.ru/news/list/eating/?page=2"
+    },
+    "items": [
+      {
+        "id": 3604852,
+        "content_type": "article",
+        "title": "Раскрыт способ выбрать полезный фастфуд",
+        "href": "/news/3604852-raskryit-sposob-vyibrat-poleznyij-fastfud/",
+        "published": {
+          "display": "2 августа 2024",
+          "rfc3339": "2024-08-02T12:50:05+03:00"
+        },
+        "adv_marker": null,
+        "description": "Вкусно и полезно!",
+        "source": {
+          "href": "https://lenta.ru",
+          "title": "Lenta.Ru",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "шаурма",
+          "uuid": "1f7cc37b-351a-5d78-8bec-ff7e3571a151",
+          "key": "AQAE3l7q5sMgoMA-fFtciMZhxCmqFZv_jH3eHWrNwPkeYAyGlmrhG2WJ5L3Eds5udh40fk6Ob9owwjGYW9vrITTssEc",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Freepik.com/CC0",
+            "id": 721,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3601551,
+        "content_type": "article",
+        "title": "Ученые назвали 6 долгосрочных и опасных последствий напитков с подсластителями",
+        "href": "/news/3601551-uchenyie-nazvali-6-dolgosrochnyih-i-opasnyih-posle/",
+        "published": {
+          "display": "2 августа 2024",
+          "rfc3339": "2024-08-02T12:47:59+03:00"
+        },
+        "adv_marker": null,
+        "description": "Ученые назвали 6 долгосрочных и опасных последствий для здоровья напитков с подсластителями.",
+        "source": {
+          "href": "https://www.vokrugsveta.ru",
+          "title": "Вокруг Света",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "газировка",
+          "uuid": "79fe3e16-711a-55e5-b1fe-2fd4577f51eb",
+          "key": "AQAEKUESq7t7uyYt5ur1I75gi1IB72cHBqnL0n9RtGr_XMkc_XGiaoV97HPleFLxZnL1z5xpVxR6KSr_UreLEYV6ox4",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Unsplash.com",
+            "id": 742,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3605029,
+        "content_type": "article",
+        "title": "Можно ли есть одно и то же каждый день — отвечает нутрициолог",
+        "href": "/news/3605029-mozhno-li-est-odno-i-to-zhe-kazhdyij-den---otvecha/",
+        "published": {
+          "display": "2 августа 2024",
+          "rfc3339": "2024-08-02T10:15:00+03:00"
+        },
+        "adv_marker": null,
+        "description": "Привычка однообразного питания может сыграть злую шутку.",
+        "source": {
+          "href": "https://super.ru/",
+          "title": "Super.ru",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "Завтрак каша",
+          "uuid": "f2e8885d-2390-5498-bd0a-972c5ab94cf2",
+          "key": "AQAEDHMT0zVJyh4Lh8vJwqdBTFpRLueABl-8VOZpdnoSLZJ4imo2c21QaTIenYDZt8cB77vTvXnneOJTKk0AWesTxW0",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Image by Freepik",
+            "id": 741,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3595213,
+        "content_type": "article",
+        "title": "Нутрициолог Попкова: дикие ягоды снижают риск болезни Альцгеймера",
+        "href": "/news/3595213-nutritsiolog-popkova-dikie-yagodyi-snizhayut-risk-/",
+        "published": {
+          "display": "2 августа 2024",
+          "rfc3339": "2024-08-02T08:00:00+03:00"
+        },
+        "adv_marker": null,
+        "description": "А морская капуста и фейхоа являются источниками йода, который улучшает память",
+        "source": {
+          "href": "https://www.kp.ru/",
+          "title": "Комсомольская правда",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "ягоды",
+          "uuid": "24812b41-499e-5896-9099-606428c27a5b",
+          "key": "AQAEKK9pLlW_ldQ5nsmz9yh9uGB9yHDisbCBxD1okKUZPY3NP1iVH0bQ0ukFnIS8w87aqEHM2nYXdmBY5euc2o3c3UY",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Unsplash.com",
+            "id": 742,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3597866,
+        "content_type": "article",
+        "title": "Россиянам назвали пять полезных для печени продуктов",
+        "href": "/news/3597866-rossiyanam-nazvali-pyat-poleznyih-dlya-pecheni-pro/",
+        "published": {
+          "display": "2 августа 2024",
+          "rfc3339": "2024-08-02T07:30:07+03:00"
+        },
+        "adv_marker": null,
+        "description": "Все они богаты микроэлементами и витаминами.",
+        "source": {
+          "href": "https://lenta.ru",
+          "title": "Lenta.Ru",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "Девушка и овощи",
+          "uuid": "84d42178-778c-5496-92e5-5f346bf7c5c0",
+          "key": "AQAEhNIOecKHX8FtvNgii1fF15MWY2q4L6W623PCL1cBoiQdAye9-VJo1_aUg8OvNId7-oeoucRVbejA6UZ3MCxTR3A",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Freepik.com",
+            "url": "http://freepik.com",
+            "id": 517
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3604758,
+        "content_type": "article",
+        "title": "Диетолог Лазуренко предупредила, что добавленный сахар ускоряет старение",
+        "href": "/news/3604758-dietolog-lazurenko-predupredila-chto-dobavlennyij-/",
+        "published": {
+          "display": "1 августа 2024",
+          "rfc3339": "2024-08-01T17:59:48+03:00"
+        },
+        "adv_marker": null,
+        "description": "Процесс гликации влияет на развитие ожирения и сахарного диабета.",
+        "source": {
+          "href": "http://www.aif.ru/health",
+          "title": "Аргументы и факты / Здоровье",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "Сахар",
+          "uuid": "0bf9974a-83d8-5d43-809e-c97ff5de71da",
+          "key": "AQAEjT0cBQmUYsdJz64ThhsAhvmXX5Wt5RMYVVLtsQnhvmxnNSh80se4OlvYN2s7g8FomfssDHFg9QuDsRT4vHSS5Ws",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Unsplash.com",
+            "id": 742,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3602613,
+        "content_type": "article",
+        "title": "Диетолог назвала женщинам помогающие продлить молодость продукты",
+        "href": "/news/3602613-dietolog-nazvala-zhenschinam-pomogayuschie-prodlit/",
+        "published": {
+          "display": "1 августа 2024",
+          "rfc3339": "2024-08-01T17:10:06+03:00"
+        },
+        "adv_marker": null,
+        "description": "Восполнить запас всех аминокислот можно с помощью разнообразного и сбалансированного питания.",
+        "source": {
+          "href": "https://lenta.ru",
+          "title": "Lenta.Ru",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "морепродукты",
+          "uuid": "1d7c2eb8-2a61-50b3-959f-6d4188742aae",
+          "key": "AQAEj30iXIU4ZOz7UouN3cmFM_xVPYqOWkw6ApZ5t2Dn10oJZQQEC07jqD47_4B13tGbbB1IOksjAZW3yiamLQUCNNY",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Freepik.com",
+            "url": "http://freepik.com",
+            "id": 517
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3587395,
+        "content_type": "article",
+        "title": "Названы лучшие продукты для борьбы с выпадением волос",
+        "href": "/news/3587395-nazvanyi-luchshie-produktyi-dlya-borbyi-s-vyipaden/",
+        "published": {
+          "display": "1 августа 2024",
+          "rfc3339": "2024-08-01T15:00:00+03:00"
+        },
+        "adv_marker": null,
+        "description": "Советы от трихолога.",
+        "source": {
+          "href": "https://www.gazeta.ru/",
+          "title": "Газета.Ру",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "Девушка со светлыми волосами",
+          "uuid": "8a44029a-64aa-52c0-be3f-4a29cc6bf4d1",
+          "key": "AQAE6uLoQM0cSMq7iQcY8RlGucUsFkRjxErKrzvgh14kM9b3IdyQvKNepNaLLfJkPSDK-dzQzKePESYSIUIesCtmHl4",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "id": 514,
+            "title": "",
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3596218,
+        "content_type": "article",
+        "title": "Эксперт рассказала о неочевидных полезных свойствах смородины",
+        "href": "/news/3596218-ekspert-rasskazala-o-neochevidnyih-poleznyih-svojs/",
+        "published": {
+          "display": "1 августа 2024",
+          "rfc3339": "2024-08-01T10:47:56+03:00"
+        },
+        "adv_marker": null,
+        "description": "Эта ягода является настоящим кладезем витаминов.",
+        "source": {
+          "href": "https://www.gazeta.ru/",
+          "title": "Газета.Ру",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "Черная смородина",
+          "uuid": "85ad2263-1035-52e3-aaaa-699817930ad1",
+          "key": "AQAEqS2WZ1UnmwBfCmRtCYHb_Cl0yHeNWU3pDkIgi9Bf-vDTFLCx-3uiNsbKlOKDyke7mus344QQcHm3yqsSggtirYs",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "https://ru.freepik.com",
+            "id": 717,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      },
+      {
+        "id": 3600932,
+        "content_type": "article",
+        "title": "Названы продукты, улучшающие здоровье зубов",
+        "href": "/news/3600932-nazvanyi-produktyi-uluchshayuschie-zdorove-zubov/",
+        "published": {
+          "display": "1 августа 2024",
+          "rfc3339": "2024-08-01T10:15:08+03:00"
+        },
+        "adv_marker": null,
+        "description": "Эмаль — самая твердая ткань в организме человека, и ее первоначальная структура передается по наследству.",
+        "source": {
+          "href": "https://www.gazeta.ru/",
+          "title": "Газета.Ру",
+          "rb_alias": ""
+        },
+        "picture": {
+          "title": "улыбка",
+          "uuid": "2ccc744c-a13a-5388-81d4-ee91c8990440",
+          "key": "AQAEnrUfyU6ksJODWcPYkuPx4QiM_D-05yLg-N4RS468r9e6rYrrrzg3YbBjSo56LvuUYRL1paqd2wUbhao1_PY8P8U",
+          "width": 660,
+          "height": 440,
+          "source": {
+            "title": "Unsplash.com",
+            "id": 742,
+            "url": ""
+          },
+          "params": {
+            "dpr": [
+              200
+            ],
+            "scale": true
+          },
+          "fmt": [
+            "jpg",
+            "webp"
+          ],
+          "error": "NO_ERROR",
+          "baseURL": "https://resizer.mail.ru/p/"
+        }
+      }
+    ],
+    "title": "Питание",
+    "rubric": {
+      "title": "Питание",
+      "slug": "eating",
+      "sitezone": null,
+      "href": "/news/list/eating/"
+    },
+    "tabs": [
+      {
+        "title": "Все",
+        "href": "/news/",
+        "alias": "all",
+        "is_current": false
+      },
+      {
+        "title": "Образ жизни",
+        "href": "/news/list/life/",
+        "alias": "life",
+        "is_current": false
+      },
+      {
+        "title": "Питание",
+        "href": "/news/list/eating/",
+        "alias": "eating",
+        "is_current": true
+      },
+      {
+        "title": "Психология",
+        "href": "/news/list/psychology/",
+        "alias": "psychology",
+        "is_current": false
+      },
+      {
+        "title": "Общество и государство",
+        "href": "/news/list/society/",
+        "alias": "society",
+        "is_current": false
+      },
+      {
+        "title": "Наука и практика",
+        "href": "/news/list/research/",
+        "alias": "research",
+        "is_current": false
+      },
+      {
+        "title": "Происшествия",
+        "href": "/news/list/incidents/",
+        "alias": "incidents",
+        "is_current": false
+      },
+      {
+        "title": "Новости компаний",
+        "href": "/news/list/companies/",
+        "alias": "companies",
+        "is_current": false
+      }
+    ]
+  },
+  "status": 200
+}
