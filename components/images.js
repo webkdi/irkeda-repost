@@ -33,10 +33,59 @@ async function processImage(imageName, imagePath = "./downloads") {
     }
 }
 
+async function addTextToImage(imageName, text, imageFolder = "./downloads") {
+    try {
+
+        const imagePath = path.join(imageFolder, imageName);
+        // Load the original image
+        const image = sharp(imagePath);
+
+        const filename = path.basename(imageName);
+        const extension = path.extname(filename);
+        const outputImage = `${path.basename(filename, extension)}_branded${extension}`;
+        const outputImagePath = path.join(imageFolder, outputImage);
+
+
+        // Get the metadata of the original image
+        const metadata = await image.metadata();
+        const { width, height } = metadata;
+
+        // Create an SVG image with the text
+        const svgHeight = 24; // Adjust this if you change the SVG's height
+        const fontSize = svgHeight / 2;
+        const svgText = `
+            <svg width="${width}" height="${svgHeight}">
+                <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+                <text x="50%" y="50%" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.1">
+                    ${text}
+                </text>
+            </svg>`;
+        // Convert the SVG to a Buffer
+        const textImage = Buffer.from(svgText);
+
+        // Calculate the top position to place the SVG 4px above the bottom
+        const topPosition = height - svgHeight - 0;
+        await image
+            // .composite([{ input: textImage, blend: 'over' }])
+            .composite([{ input: textImage, top: topPosition, left: 0 }])
+            .toFile(outputImagePath);
+
+        // await fs.rename(outputImagePath, imagePath);
+
+        console.log('Image saved with text added:', imagePath);
+        return outputImage;
+    } catch (error) {
+        console.error('Error adding text to image:', error);
+    }
+}
+// addTextToImage('3595213.jpg', 'This is the added text');
+
+
 // processImage(imageName, imagePath)
 //     .then(createdFileName => console.log("Processed file:", createdFileName))
 //     .catch(error => console.error("Processing error:", error));
 
 module.exports = {
     processImage,
+    addTextToImage,
 };

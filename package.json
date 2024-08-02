@@ -12,10 +12,11 @@
     "axios": "^1.7.2",
     "axios-curlirize": "^2.0.0",
     "dotenv": "^16.4.5",
-    "lowdb": "^7.0.1",
+    "https-proxy-agent": "^7.0.5",
     "mysql2": "^3.10.3",
     "node-cron": "^3.0.3",
+    "qs": "^6.13.0",
     "sharp": "^0.33.4",
-    "sqlite3": "^5.1.7"
+    "uuid": "^10.0.0"
   }
 }

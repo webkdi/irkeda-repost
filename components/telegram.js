@@ -6,8 +6,6 @@ const db = require("./database.js");
 
 require('dotenv').config();
 
-const sqlite3 = require('sqlite3').verbose();
-// let db = new sqlite3.Database('./database.db');
 
 // Ensure the local folder exists
 const downloadFolder = path.join(__dirname, '../downloads');
@@ -15,13 +13,6 @@ const downloadFolder = path.join(__dirname, '../downloads');
 if (!fs.existsSync(downloadFolder)) {
     fs.mkdirSync(downloadFolder);
 }
-
-// // Ensure the table exists
-// db.run(`CREATE TABLE IF NOT EXISTS tg_updates (
-//     id INTEGER PRIMARY KEY AUTOINCREMENT,
-//     update_id INTEGER UNIQUE,
-//     content TEXT
-// )`);
 
 // Function to download a file
 async function downloadFile(url, filename) {
@@ -38,19 +29,6 @@ async function downloadFile(url, filename) {
         writer.on('error', reject);
     });
 }
-
-// async function db_save_update(update_id) {
-//     return new Promise((resolve, reject) => {
-//         const stmt = db.prepare(`INSERT OR IGNORE INTO tg_updates (update_id) VALUES (?)`);
-//         stmt.run(update_id, function (err) {
-//             if (err) {
-//                 return reject(err);
-//             }
-//             resolve(this.changes); // returns number of rows changed (0 if ignored)
-//         });
-//         stmt.finalize();
-//     });
-// }
 
 function generateUrlFromTelegramMessage(message) {
     if (message.text || message.caption) {
@@ -375,7 +353,7 @@ async function forwardMessage(type, message, localFilePath, targetChatId, telegr
             console.log('Unsupported message type');
         }
     } catch (error) {
-        console.error(`Error resending message:`, error);
+        console.error(`Error resending message:`, error.response.data);
         return error;
     }
 }
@@ -384,4 +362,5 @@ async function forwardMessage(type, message, localFilePath, targetChatId, telegr
 module.exports = {
     get_updates,
     forwardMessage,
+    downloadFile,
 };

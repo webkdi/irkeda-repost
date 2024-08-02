@@ -23,11 +23,25 @@ async function insertIgnore(update_id) {
         const [res] = await db.query(sql);
         return res.affectedRows;
     } catch (err) {
-        console.log(update_id, "error in INSERT IGNORE INTO datico.serv_telegram");
+        console.log(update_id, "error in INSERT IGNORE INTO datico.serv_telegram_irkeda");
+        return 0;
+    }
+}
+
+async function deleteUpdateId(update_id) {
+    const sql = `
+      DELETE FROM datico.serv_telegram_irkeda WHERE update_id = ?
+    `;
+    try {
+        const [res] = await db.query(sql, [update_id]);
+        return res.affectedRows;
+    } catch (err) {
+        console.log(update_id, "error in DELETE FROM datico.serv_telegram_irkeda", err);
         return 0;
     }
 }
 
 module.exports = {
     insertIgnore,
+    deleteUpdateId,
 };
