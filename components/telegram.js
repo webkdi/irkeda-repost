@@ -100,7 +100,7 @@ async function get_updates() {
         const data = response.data;
 
         // // Store messages in a local JSON file
-        // var jsonFilePath = path.join(__dirname, 'getUpdatesA.json');
+        // var jsonFilePath = path.join(__dirname, 'getUpdates_A.json');
         // fs.writeFileSync(jsonFilePath, JSON.stringify(data, null, 2), 'utf-8');
 
         if (!data.result || data.result.length === 0) {
@@ -134,8 +134,8 @@ async function get_updates() {
             return null;
         }
 
-        // // Store messages in a local JSON file
-        // jsonFilePath = path.join(__dirname, 'getUpdatesB.json');
+        // Store messages in a local JSON file
+        // jsonFilePath = path.join(__dirname, 'getUpdates_B.json');
         // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
 
         await Promise.all(
@@ -144,7 +144,7 @@ async function get_updates() {
                 const content = JSON.stringify(ms.channel_post);
                 const changes = await db.insertIgnore(update_id);
                 if (changes > 0) {
-                    console.log('Update ID inserted:', update_id);
+                    console.log('TG update inserted:', update_id);
                 } else {
                     // console.log('Update ID already exists:', update_id);
                     return null; // Return null for entries to skip
@@ -176,6 +176,10 @@ async function get_updates() {
                         //   asset.files = ms.channel_post.photo;
                         //   asset.message = "";
                         //   asset.type = "image";
+                    } else if (ms.channel_post.video && ms.channel_post.caption) {
+                        asset.files = ms.channel_post.video;
+                        asset.message = ms.channel_post.caption;
+                        asset.type = "video";
                     } else if (ms.channel_post.animation && ms.channel_post.animation.mime_type == "video/mp4" && ms.channel_post.caption) {
                         asset.files = ms.channel_post.animation;
                         asset.message = ms.channel_post.caption;
@@ -183,7 +187,6 @@ async function get_updates() {
                     } else {
                         unknown.push(ms);
                     }
-
 
                     //найти ссылку
                     const urlFound = await generateUrlFromTelegramMessage(
@@ -273,8 +276,8 @@ async function get_updates() {
             return null;
         }
 
-        // // Store messages in a local JSON file
-        // jsonFilePath = path.join(__dirname, 'getUpdatesC.json');
+        // Store messages in a local JSON file
+        // jsonFilePath = path.join(__dirname, 'getUpdates_C.json');
         // fs.writeFileSync(jsonFilePath, JSON.stringify(updates, null, 2), 'utf-8');
 
         return messages;

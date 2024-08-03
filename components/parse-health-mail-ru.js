@@ -7,7 +7,12 @@ const img = require('./images.js');
 const google = require('./google_search.js');
 const db = require("./database.js");
 const url = require('url');
-const cheerio = require('cheerio');
+const path = require('path');
+
+const trackingFolder = path.join(__dirname, '../tracking');
+if (!fs.existsSync(trackingFolder)) {
+    fs.mkdirSync(trackingFolder);
+}
 
 async function fetchArticle(article) {
 
@@ -119,6 +124,8 @@ async function fetchArticle(article) {
 }
 
 async function fetchAndParse() {
+
+    const storeFilesForTracking = true;
     try {
         // Proxy configuration
         const proxyUrl = process.env.PROXY_URL;
@@ -129,7 +136,11 @@ async function fetchAndParse() {
             // httpsAgent: agent
         });
         const jsonData = response.data;
-        fs.writeFileSync('articles_received.json', JSON.stringify(jsonData, null, 2), 'utf-8');
+
+        if (storeFilesForTracking) {
+            const filePath = path.join(trackingFolder, '1_articles_received.json');
+            fs.writeFileSync(filePath, JSON.stringify(jsonData, null, 2), 'utf-8');
+        }
 
         // Extract the articles from the JSON structure
         const articles = [];
@@ -143,13 +154,17 @@ async function fetchAndParse() {
                     href: `https://health.mail.ru${href}`,
                     description: description,
                     picture: `${picture.baseURL}${picture.uuid}/${picture.key}.jpg`,
-                    pictureOwner: picture.source.title,
-                    sourceName: source.title,
-                    sourceUrl: source.href
+                    pictureOwner: picture.source ? picture.source.title : '',  // Check if source exists
+                    sourceName: source ? source.title : 'Здоровье Mail.ru',  // Check if source exists
+                    sourceUrl: source ? source.href : 'https://health.mail.ru/',  // Check if source exists
                 });
             });
         }
-        fs.writeFileSync('articles_extracted.json', JSON.stringify(articles, null, 2), 'utf-8');
+
+        if (storeFilesForTracking) {
+            const filePath = path.join(trackingFolder, '2_articles_extracted.json');
+            fs.writeFileSync(filePath, JSON.stringify(articles, null, 2), 'utf-8');
+        }
 
         for (let i = 0; i < articles.length; i++) {
             const newId = articles[i].id;
@@ -175,8 +190,11 @@ async function fetchAndParse() {
             }
         }
 
-        // console.log(JSON.stringify(messages));
-        fs.writeFileSync('articles_messages.json', JSON.stringify(messages, null, 2), 'utf-8');
+        if (storeFilesForTracking) {
+            const filePath = path.join(trackingFolder, '3_articles_messages.json');
+            fs.writeFileSync(filePath, JSON.stringify(messages, null, 2), 'utf-8');
+        }
+
         return messages;
 
     } catch (error) {

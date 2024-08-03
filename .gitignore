@@ -1,11 +1,10 @@
-# Node.js dependencies
-node_modules/
-
 # Environment variables
 .env
 
-# Local download directory
+# Local directory
 downloads/
+tracking/
+node_modules/
 
 # Ignore all text files
 *.txt

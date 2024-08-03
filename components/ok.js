@@ -38,7 +38,7 @@ async function getUploadUrl() {
 
     try {
         const response = await axios.get('https://api.ok.ru/fb.do', { params });
-        console.log('Upload URL response:', response.data);
+        // console.log('Upload URL response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error getting upload URL:', error.response ? error.response.data : error.message);
@@ -52,7 +52,7 @@ async function uploadImage(uploadUrl, filePath) {
 
     try {
         const response = await axios.post(uploadUrl, form, { headers: form.getHeaders() });
-        console.log('Upload response:', response.data);
+        // console.log('Upload response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error uploading image:', error.response ? error.response.data : error.message);
@@ -75,7 +75,7 @@ async function commitPhoto(photoId, token) {
 
     try {
         const response = await axios.get('https://api.ok.ru/fb.do', { params });
-        console.log('Commit photo response:', response.data);
+        // console.log('Commit photo response:', response.data);
         return response.data;
     } catch (error) {
         console.error('Error committing photo:', error.response ? error.response.data : error.message);
@@ -142,7 +142,7 @@ async function commitVideo(videoId, token) {
     }
 }
 
-async function postToGroup(mediaId, caption, mediaType) {
+async function postToGroup(mediaId, caption = "dummy text", mediaType) {
     const attachment = {
         "media": [
             {
@@ -192,26 +192,76 @@ const localImagePath = path.join(__dirname, 'image.png'); // Local image file pa
 const localVideoPath = path.join(__dirname, 'video.mp4'); // Local video file path
 const caption = "Here is some text";
 
+// async function postImage(localImagePath, caption) {
+//     try {
+//         const uploadUrlResponse = await getUploadUrl();
+//         if (uploadUrlResponse && uploadUrlResponse.upload_url) {
+//             const uploadResponse = await uploadImage(uploadUrlResponse.upload_url, localImagePath);
+//             if (uploadResponse && uploadResponse.photos) {
+//                 const photoId = Object.keys(uploadResponse.photos)[0];
+//                 const photoToken = uploadResponse.photos[photoId].token;
+//                 if (photoToken) {
+//                     const commitResponse = await commitPhoto(photoId, photoToken);
+//                     if (commitResponse && commitResponse.photos) {
+//                         await postToGroup(photoToken, caption, 'photo');
+//                     }
+//                 }
+//             }
+//         }
+//     } catch (error) {
+//         console.error('An error occurred while posting image:', error);
+//     }
+// }
+
 async function postImage(localImagePath, caption) {
     try {
+        // Step 1: Get the upload URL
         const uploadUrlResponse = await getUploadUrl();
-        if (uploadUrlResponse && uploadUrlResponse.upload_url) {
-            const uploadResponse = await uploadImage(uploadUrlResponse.upload_url, localImagePath);
-            if (uploadResponse && uploadResponse.photos) {
-                const photoId = Object.keys(uploadResponse.photos)[0];
-                const photoToken = uploadResponse.photos[photoId].token;
-                if (photoToken) {
-                    const commitResponse = await commitPhoto(photoId, photoToken);
-                    if (commitResponse && commitResponse.photos) {
-                        await postToGroup(photoToken, caption, 'photo');
-                    }
-                }
-            }
+        if (!uploadUrlResponse || !uploadUrlResponse.upload_url) {
+            throw new Error('Failed to get upload URL');
         }
+
+        // Step 2: Upload the image
+        const uploadResponse = await uploadImage(uploadUrlResponse.upload_url, localImagePath);
+        if (!uploadResponse || !uploadResponse.photos) {
+            throw new Error('Failed to upload image');
+        }
+
+        const photoId = Object.keys(uploadResponse.photos)[0];
+        const photoToken = uploadResponse.photos[photoId].token;
+        if (!photoToken) {
+            throw new Error('Failed to get photo token');
+        }
+
+        // Step 3: Commit the photo
+        const commitResponse = await commitPhoto(photoId, photoToken);
+        if (!commitResponse || !commitResponse.photos) {
+            throw new Error('Failed to commit photo');
+        }
+
+        // Step 4: Post to the group
+        const postResponse = await postToGroup(photoToken, caption, 'photo');
+        if (!postResponse) {
+            throw new Error('Failed to post image to the group');
+        }
+
+        // Return the final result of the post operation
+        return {
+            success: true,
+            photoId: photoId,
+            photoToken: photoToken,
+            commitResponse: JSON.stringify(commitResponse, null, 2),
+            postResponse: postResponse
+        };
     } catch (error) {
-        console.error('An error occurred while posting image:', error);
+        console.error('An error occurred while posting image:', error.message);
+        return {
+            success: false,
+            error: error.message
+        };
     }
 }
+
 
 async function postVideo(localVideoPath, caption) {
     try {

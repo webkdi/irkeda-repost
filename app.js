@@ -32,9 +32,13 @@ async function deleteAllFilesInFolder() {
 
 async function postMessages(messages) {
 
+    const repost_tg = true;
+    const repost_vk = true;
+    const repost_ok = true;
+
     // Ensure messages is an array before proceeding
     if (!Array.isArray(messages)) {
-        console.error('Error: messages is not an array');
+        console.error('postMessages error: messages is not an array');
         return;
     }
 
@@ -53,30 +57,42 @@ async function postMessages(messages) {
         // console.log("localFilePath:", localFilePath);
 
         // repost to telegram
-        const telegramBotToken = process.env.TG_BOT_TOKEN_IRKEDA;
-        const targetChatId = process.env.TG_REPOST_CHANNEL_ID;
-        await tg.forwardMessage(message.type, message.message, localFilePath, targetChatId, telegramBotToken);
-
+        if (repost_tg) {
+            const telegramBotToken = process.env.TG_BOT_TOKEN_IRKEDA;
+            const targetChatId = process.env.TG_REPOST_CHANNEL_ID;
+            await tg.forwardMessage(message.type, message.message, localFilePath, targetChatId, telegramBotToken);
+        }
 
         //(de)reactivate vkok for test purposes
-        repost_vkok = true;
         // repost to vk ok
-        if (message.type === 'image' && repost_vkok) {
-            const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
-            console.log("vk.postImageWithMessage:", vkResponse);
-            const okResponse = await ok.postImage(localFilePath, message.message);
-            console.log("ok.postImage:", okResponse);
+        if (message.type === 'image') {
+            if (repost_ok) {
+                const okResponse = await ok.postImage(localFilePath, message.message);
+                console.log("ok.postImage:", okResponse);
+            }
+            if (repost_vk) {
+                const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
+                console.log("vk.postImageWithMessage:", vkResponse);
+            }
         } else if (message.type === 'video' && repost_vkok) {
-            const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
-            console.log("vk.postVideoWithMessage:", vkResponse);
-            const okResponse = await ok.postVideo(localFilePath, message.message);
-            console.log("ok.postVideo:", okResponse);
+            if (repost_ok) {
+                const okResponse = await ok.postVideo(localFilePath, message.message);
+                console.log("ok.postVideo:", okResponse);
+            }
+            if (repost_vk) {
+                const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
+                console.log("vk.postVideoWithMessage:", vkResponse);    
+            }
         } else if (message.type === 'text' && repost_vkok) {
-            const link = message.url ? message.url : null;
-            const vkResponse = await vk.postText(message.message, link);
-            console.log("vk.postText:", vkResponse);
-            const okResponse = await ok.postText(message.message);
-            console.log("ok.postText:", okResponse);
+            if (repost_ok) {
+                const okResponse = await ok.postText(message.message);
+                console.log("ok.postText:", okResponse);
+            }
+            if (repost_vk) {
+                const link = message.url ? message.url : null;
+                const vkResponse = await vk.postText(message.message, link);
+                console.log("vk.postText:", vkResponse);
+            }
         }
 
         // Delete the local file
@@ -108,16 +124,15 @@ async function runTask() {
         // Get updates from Telegram
         const messagesFromTg = await tg.get_updates();
         if (messagesFromTg === null) {
-            console.log("No new updates. Skipping processing.");
+            console.log("No new TG updates. Skipping processing.");
         } else {
             await postMessages(messagesFromTg);
         }
 
         // Get updates from Telegram
         const messagesFromMailRu = await mailru.fetchAndParse();
-        if (messagesFromMailRu === null) {
-            console.log("No new updates from messagesFromMailRu. Skipping processing.");
-            return;
+        if (messagesFromMailRu === null || messagesFromMailRu.length == 0) {
+            console.log("No new MailRu updates. Skipping processing.");
         } else {
             await postMessages(messagesFromMailRu);
         }
