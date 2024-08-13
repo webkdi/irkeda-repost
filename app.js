@@ -74,7 +74,7 @@ async function postMessages(messages) {
                 const vkResponse = await vk.postImageWithMessage(localFilePath, message.message);
                 console.log("vk.postImageWithMessage:", vkResponse);
             }
-        } else if (message.type === 'video' && repost_vkok) {
+        } else if (message.type === 'video') {
             if (repost_ok) {
                 const okResponse = await ok.postVideo(localFilePath, message.message);
                 console.log("ok.postVideo:", okResponse);
@@ -83,7 +83,7 @@ async function postMessages(messages) {
                 const vkResponse = await vk.postVideoWithMessage(localFilePath, message.message);
                 console.log("vk.postVideoWithMessage:", vkResponse);    
             }
-        } else if (message.type === 'text' && repost_vkok) {
+        } else if (message.type === 'text') {
             if (repost_ok) {
                 const okResponse = await ok.postText(message.message);
                 console.log("ok.postText:", okResponse);
@@ -95,14 +95,14 @@ async function postMessages(messages) {
             }
         }
 
-        // Delete the local file
-        fs.unlink(localFilePath, (err) => {
-            if (err) {
-                console.error(`Error deleting file ${localFilePath}:`, err);
-            } else {
-                console.log(`File ${localFilePath} deleted successfully.`);
-            }
-        });
+        // // Delete the local file
+        // fs.unlink(localFilePath, (err) => {
+        //     if (err) {
+        //         console.error(`Error deleting file ${localFilePath}:`, err);
+        //     } else {
+        //         console.log(`File ${localFilePath} deleted successfully.`);
+        //     }
+        // });
 
     }
 

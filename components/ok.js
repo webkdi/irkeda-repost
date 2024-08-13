@@ -83,12 +83,15 @@ async function commitPhoto(photoId, token) {
     }
 }
 
-async function getVideoUploadUrl() {
+async function getVideoUploadUrl(fileName, fileSize) {
+    // Construct the parameters including file_name and file_size
     const params = {
         access_token: okAccessToken,
         application_key: okPublicKey,
         method: "video.getUploadUrl",
         gid: "70000006994251", // Group ID
+        file_name: fileName,   // Required parameter
+        file_size: fileSize,   // Required parameter
         format: "json"
     };
 
@@ -111,9 +114,16 @@ async function uploadVideo(uploadUrl, filePath) {
 
     try {
         const response = await axios.post(uploadUrl, form, { headers: form.getHeaders() });
-        console.log('Upload response:', response.data);
-        return response.data;
+
+        // Check if the upload was successful
+        if (response.status === 200) {
+            console.log('Video uploaded successfully:', response.status);
+            return response.data; // Return the response data if needed for further processing
+        } else {
+            throw new Error(`Upload failed with status: ${response.status}`);
+        }
     } catch (error) {
+        // Log detailed error information
         console.error('Error uploading video:', error.response ? error.response.data : error.message);
         return null;
     }
@@ -144,20 +154,37 @@ async function commitVideo(videoId, token) {
 
 async function postToGroup(mediaId, caption = "dummy text", mediaType) {
     const attachment = {
-        "media": [
-            {
-                "type": "text",
-                "text": caption
-            }
-        ]
+        "media": []
     };
 
-    if (mediaType === 'photo' || mediaType === 'video') {
+    // Add text to the attachment if caption is provided
+    if (caption) {
         attachment.media.push({
-            "type": mediaType,
-            "list": [
-                { "id": mediaId }
-            ]
+            "type": "text",
+            "text": caption
+        });
+    }
+
+    // // Add the media (video or photo) to the attachment
+    // if (mediaType === 'photo' || mediaType === 'video') {
+    //     attachment.media.push({
+    //         "type": mediaType,
+    //         "list": [
+    //             { "id": mediaId.toString() }  // Ensure the ID is a string
+    //         ]
+    //     });
+    // }
+
+    // Add the media (video or photo) to the attachment
+    if (mediaType === 'photo') {
+        attachment.media.push({
+            "type": "photo",
+            "list": [{ "id": mediaId.toString() }]
+        });
+    } else if (mediaType === 'video') {
+        attachment.media.push({
+            "type": "movie",
+            "list": [{ "id": mediaId.toString() }]
         });
     }
 
@@ -166,25 +193,31 @@ async function postToGroup(mediaId, caption = "dummy text", mediaType) {
         method: "mediatopic.post",
         gid: "70000006994251", // Group ID
         type: "GROUP_THEME",
-        attachment: JSON.stringify(attachment),
+        attachment: JSON.stringify(attachment),  // Convert the attachment to a JSON string
         format: "json",
         access_token: okAccessToken,
         message: caption
     };
 
-    const sig = crypto.createHash('md5').update(arInStr(params) + crypto.createHash('md5').update(okAccessToken + okPrivateKey).digest('hex')).digest('hex');
+    // Generate signature
+    const sig = crypto.createHash('md5')
+        .update(arInStr(params) + crypto.createHash('md5').update(okAccessToken + okPrivateKey).digest('hex'))
+        .digest('hex');
     params.sig = sig;
 
     try {
+        // Post the mediatopic
         const result = await axios.post("https://api.ok.ru/fb.do", new URLSearchParams(params));
-        // console.log('OK post to group response:', result.data);
-        if (result.data && result.data.error_code === 5000) {
-            const retryResult = await axios.post("https://api.ok.ru/fb.do", new URLSearchParams(params));
-            console.log('Retry result:', retryResult.data);
+        console.log('OK post to group response:', result.data);
+
+        if (result.data && result.data.error_code) {
+            throw new Error(`Failed to post to group, error_code: ${result.data.error_code}, error_msg: ${result.data.error_msg}`);
         }
+
         return result.data;
     } catch (error) {
         console.error('Error posting to group:', error.response ? error.response.data : error.message);
+        return null;
     }
 }
 
@@ -262,27 +295,97 @@ async function postImage(localImagePath, caption) {
     }
 }
 
-
 async function postVideo(localVideoPath, caption) {
     try {
-        const uploadUrlResponse = await getVideoUploadUrl();
-        if (uploadUrlResponse && uploadUrlResponse.upload_url) {
-            const uploadResponse = await uploadVideo(uploadUrlResponse.upload_url, localVideoPath);
-            if (uploadResponse && uploadResponse.video_id) {
-                const videoId = uploadResponse.video_id;
-                const videoToken = uploadResponse.token;
-                if (videoToken) {
-                    const commitResponse = await commitVideo(videoId, videoToken);
-                    if (commitResponse && commitResponse.video_id) {
-                        await postToGroup(videoId, caption, 'video');
-                    }
-                }
+        // Extract file name and file size from the local file path
+        const fileName = path.basename(localVideoPath);
+        const fileSize = fs.statSync(localVideoPath).size;
+
+        // Step 1: Get the upload URL
+        let uploadUrlResponse;
+        try {
+            uploadUrlResponse = await getVideoUploadUrl(fileName, fileSize);
+            if (!uploadUrlResponse || !uploadUrlResponse.upload_url) {
+                throw new Error('Failed to get upload URL');
             }
+        } catch (error) {
+            throw new Error(`Step 1 (Get Upload URL) Error: ${error.message}`);
         }
+
+        // Step 2: Upload the video
+        let uploadResponse;
+        try {
+            uploadResponse = await uploadVideo(uploadUrlResponse.upload_url, localVideoPath);
+            if (!uploadResponse) {
+                throw new Error('Failed to upload video');
+            }
+
+        } catch (error) {
+            throw new Error(`Step 2 (Upload Video) Error: ${error.message}`);
+        }
+
+        // Step 3: Update the video information
+        const videoId = uploadUrlResponse.video_id;
+        let updateResponse;
+        try {
+            const params = {
+                access_token: okAccessToken,
+                application_key: okPublicKey,
+                method: "video.update",
+                vid: videoId,  // Correct parameter name for video ID
+                title: caption,  // Assuming the caption is the title of the video
+                // title: "🥦🍅🥑🍇🍓🍎🍉🥕🍠🌽🍊🍍🍒🍆🥒🥝🍌🍋🍏🥥🥬",
+                format: "json"
+            };
+
+            const sig = crypto.createHash('md5')
+                .update(arInStr(params) + crypto.createHash('md5').update(okAccessToken + okPrivateKey).digest('hex'))
+                .digest('hex');
+            params.sig = sig;
+
+            // Perform the request using GET
+            updateResponse = await axios.get('https://api.ok.ru/fb.do', { params });
+
+            console.log('Update Response Status:', updateResponse.status); // Log the response status
+
+            if (updateResponse.status === 200 && !updateResponse.data) {
+                console.log('Video info updated successfully (empty response indicates success)');
+            } else if (updateResponse.data && updateResponse.data.error_code) {
+                throw new Error(`Failed to update video info, error_code: ${updateResponse.data.error_code}, error_msg: ${updateResponse.data.error_msg}`);
+            }
+
+        } catch (error) {
+            console.error('Step 3 (Update Video Info) Error:');
+            if (error.response) {
+                console.error('Response status:', error.response.status);
+                console.error('Response data:', error.response.data);
+                console.error('Response headers:', error.response.headers);
+            } else if (error.request) {
+                console.error('No response received:', error.request);
+            } else {
+                console.error('Error message:', error.message);
+            }
+            console.error('Error config:', error.config);
+            throw new Error(`Step 3 (Update Video Info) Error: ${error.message}`);
+        }
+
+
+        // Step 4: Post to the group
+        try {
+            const postResponse = await postToGroup(videoId, caption, 'video');
+            if (!postResponse) {
+                throw new Error('Failed to post video to the group');
+            }
+            return postResponse;
+        } catch (error) {
+            throw new Error(`Step 4 (Post to Group) Error: ${error.message}`);
+        }
+
     } catch (error) {
-        console.error('An error occurred while posting video:', error);
+        console.error('An error occurred while posting video:', error.message);
     }
 }
+
 
 async function postText(caption) {
     try {
