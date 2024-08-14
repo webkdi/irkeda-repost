@@ -110,9 +110,10 @@ async function fetchArticle(article) {
             return;
         }
         resArticle.message = shortText;
+        imageTitle = await ai.getTitleOutIfPost(shortText);
 
         await tg.downloadFile(resArticle.file_path, resArticle.file_local);
-        const imgBranded = await img.addTextToImage(resArticle.file_local, resArticle.tmp_file_owner);
+        const imgBranded = await img.addTextToImage(resArticle.file_local, resArticle.tmp_file_owner, imageTitle);
         resArticle.file_local = imgBranded;
 
         return resArticle;

@@ -33,9 +33,8 @@ async function processImage(imageName, imagePath = "./downloads") {
     }
 }
 
-async function addTextToImage(imageName, text, imageFolder = "./downloads") {
+async function addTextToImage(imageName, text, imageTitle, imageFolder = "./downloads") {
     try {
-
         const imagePath = path.join(imageFolder, imageName);
         // Load the original image
         const image = sharp(imagePath);
@@ -45,41 +44,53 @@ async function addTextToImage(imageName, text, imageFolder = "./downloads") {
         const outputImage = `${path.basename(filename, extension)}_branded${extension}`;
         const outputImagePath = path.join(imageFolder, outputImage);
 
-
         // Get the metadata of the original image
         const metadata = await image.metadata();
         const { width, height } = metadata;
 
-        // Create an SVG image with the text
-        const svgHeight = 24; // Adjust this if you change the SVG's height
-        const fontSize = svgHeight / 2;
-        const svgText = `
-            <svg width="${width}" height="${svgHeight}">
-                <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
-                <text x="50%" y="50%" font-size="${fontSize}" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.1">
-                    ${text}
-                </text>
-            </svg>`;
-        // Convert the SVG to a Buffer
-        const textImage = Buffer.from(svgText);
+        // Create the first SVG (Footer)
+        let svgHeightFooter = 24; // Height of the footer SVG
+        let fontSizeFooter = svgHeightFooter / 2;
+        let svgTextFooter = `
+        <svg width="${width}" height="${svgHeightFooter}">
+            <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+            <text x="50%" y="50%" font-size="${fontSizeFooter}" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.1">
+                ${text}
+            </text>
+        </svg>`;
+        let textImageBufferFooter = Buffer.from(svgTextFooter, 'utf-8');
+        let topPositionFooter = height - svgHeightFooter - 4; // Position the footer SVG near the bottom
 
-        // Calculate the top position to place the SVG 4px above the bottom
-        const topPosition = height - svgHeight - 0;
+
+        // Create the second SVG (Title)
+        let svgHeightTitle = 200; // Height of the title SVG
+        let fontSizeTitle = Math.min(width / imageTitle.length * 1.8, svgHeightTitle / 1.8); // Adjust font size based on image width
+        let svgTextTitle = `
+        <svg width="${width}" height="${svgHeightTitle}">
+            <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
+            <text x="50%" y="50%" font-size="${fontSizeTitle}" font-family="cursive, 'Comic Sans MS', 'URW Chancery L', sans-serif" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.3">
+                ${imageTitle}
+            </text>
+        </svg>`;
+        let topPositionTitle = (height - svgHeightTitle) / 2 // Position the title SVG at the top
+        let textImageBufferTitle = Buffer.from(svgTextTitle, 'utf-8');
+
+        // Composite both SVGs onto the image
         await image
-            // .composite([{ input: textImage, blend: 'over' }])
-            .composite([{ input: textImage, top: topPosition, left: 0 }])
+            .composite([
+                { input: textImageBufferFooter, top: topPositionFooter, left: 0 },
+                { input: textImageBufferTitle, top: topPositionTitle, left: 0 }
+            ])
             .toFile(outputImagePath);
 
-        // await fs.rename(outputImagePath, imagePath);
-
-        console.log('Image saved with text added:', imagePath);
+        console.log('Image saved with text added:', outputImagePath);
         return outputImage;
     } catch (error) {
         console.error('Error adding text to image:', error);
     }
 }
-// addTextToImage('3595213.jpg', 'This is the added text');
 
+// addTextToImage('3635236.jpg', 'Unsplash.com', 'Отказ от сахара - путь к здоровью');
 
 // processImage(imageName, imagePath)
 //     .then(createdFileName => console.log("Processed file:", createdFileName))
