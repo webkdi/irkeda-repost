@@ -2,7 +2,7 @@ const fs = require("fs").promises;
 const path = require("path");
 const sharp = require("sharp");
 
-const imageName = "981103788.jpg";
+const imageName = "3651513.jpg";
 const imagePath = "./downloads";
 
 async function delay(ms) {
@@ -57,7 +57,8 @@ async function addTextToImage(imageName, text, imageTitle, imageFolder = "./down
             <text x="50%" y="50%" font-size="${fontSizeFooter}" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.1">
                 ${text}
             </text>
-        </svg>`;
+        </svg>
+        `;
         let textImageBufferFooter = Buffer.from(svgTextFooter, 'utf-8');
         let topPositionFooter = height - svgHeightFooter - 4; // Position the footer SVG near the bottom
 
@@ -67,11 +68,26 @@ async function addTextToImage(imageName, text, imageTitle, imageFolder = "./down
         let fontSizeTitle = Math.min(width / imageTitle.length * 1.8, svgHeightTitle / 1.8); // Adjust font size based on image width
         let svgTextTitle = `
         <svg width="${width}" height="${svgHeightTitle}">
+            <defs>
+                <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                    <feOffset result="offOut" in="SourceAlpha" dx="3" dy="3" />
+                    <feGaussianBlur result="blurOut" in="offOut" stdDeviation="3" />
+                    <feBlend in="SourceGraphic" in2="blurOut" mode="normal" />
+                    <feComponentTransfer>
+                        <feFuncA type="linear" slope="0.5" />
+                    </feComponentTransfer>
+                    <feMerge>
+                        <feMergeNode in="blurOut" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
             <rect x="0" y="0" width="100%" height="100%" fill="transparent" />
-            <text x="50%" y="50%" font-size="${fontSizeTitle}" font-family="cursive, 'Comic Sans MS', 'URW Chancery L', sans-serif" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="black" stroke-width="0.3">
+            <text x="50%" y="50%" font-size="${fontSizeTitle}" font-family="cursive, 'Comic Sans MS', 'URW Chancery L', sans-serif" font-weight="bold" fill="white" text-anchor="middle" alignment-baseline="middle" stroke="#6B072A" stroke-width="0.5" filter="url(#shadow)">
                 ${imageTitle}
             </text>
-        </svg>`;
+        </svg>
+        `;
         let topPositionTitle = (height - svgHeightTitle) / 2 // Position the title SVG at the top
         let textImageBufferTitle = Buffer.from(svgTextTitle, 'utf-8');
 
@@ -90,7 +106,7 @@ async function addTextToImage(imageName, text, imageTitle, imageFolder = "./down
     }
 }
 
-// addTextToImage('3635236.jpg', 'Unsplash.com', 'Отказ от сахара - путь к здоровью');
+// addTextToImage('3651513.jpg', 'Unsplash.com', 'Отказ от сахара - путь к здоровью');
 
 // processImage(imageName, imagePath)
 //     .then(createdFileName => console.log("Processed file:", createdFileName))
